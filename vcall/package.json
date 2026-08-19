@@ -1,0 +1,25 @@
+{
+  "name": "vcall",
+  "version": "1.0.0",
+  "description": "Video-chamada multi-party com WebRTC + mediasoup + Socket.IO",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "build:client": "esbuild public/js/mediasoupClientEntry.js --bundle --outfile=public/js/mediasoup-bundle.js --format=iife"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mediasoup": "^3.14.8",
+    "mediasoup-client": "^3.22.0",
+    "socket.io": "^4.7.4",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

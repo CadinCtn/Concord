@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vcall — Entrar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f1117;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #e2e8f0;
+    }
+
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .logo svg { color: #6366f1; }
+
+    .logo h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: #6366f1; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 20px;
+    }
+
+    input:focus { border-color: #6366f1; }
+    input::placeholder { color: #475569; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      margin-top: 4px;
+    }
+
+    .btn:hover { background: #5254d4; }
+    .btn:active { transform: scale(.98); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: #475569;
+      font-size: 0.8rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #2d3148;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: #94a3b8;
+      border: 1px solid #2d3148;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-secondary:hover { border-color: #6366f1; color: #6366f1; }
+
+    .error {
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: -12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.899L15 14v-4z"/>
+        <rect x="2" y="7" width="13" height="10" rx="2"/>
+      </svg>
+      <h1>v<span>call</span></h1>
+    </div>
+
+    <label for="displayName">Seu nome</label>
+    <input
+      id="displayName"
+      type="text"
+      placeholder="Como você quer ser chamado?"
+      maxlength="30"
+      autocomplete="off"
+    />
+
+    <label for="roomId">ID da sala</label>
+    <input
+      id="roomId"
+      type="text"
+      placeholder="Ex: reuniao-equipe"
+      maxlength="40"
+      autocomplete="off"
+    />
+
+    <p class="error" id="errorMsg"></p>
+
+    <button class="btn" id="btnJoin">Entrar na Sala</button>
+
+    <div class="divider">ou</div>
+
+    <button class="btn-secondary" id="btnCreate">Criar nova sala aleatória</button>
+  </div>
+
+  <script>
+    const displayNameInput = document.getElementById('displayName');
+    const roomIdInput = document.getElementById('roomId');
+    const errorMsg = document.getElementById('errorMsg');
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+    }
+
+    function hideError() {
+      errorMsg.style.display = 'none';
+    }
+
+    function randomRoomId() {
+      const adj = ['rapido','verde','azul','novo','forte','claro'];
+      const noun = ['gato','sol','rio','vento','luna','pedra'];
+      const num = Math.floor(Math.random() * 900) + 100;
+      return `${adj[Math.floor(Math.random()*adj.length)]}-${noun[Math.floor(Math.random()*noun.length)]}-${num}`;
+    }
+
+    function goToRoom() {
+      hideError();
+      const name = displayNameInput.value.trim();
+      const room = roomIdInput.value.trim();
+
+      if (!name) { showError('Digite seu nome para continuar.'); displayNameInput.focus(); return; }
+      if (!room) { showError('Digite o ID de uma sala para entrar.'); roomIdInput.focus(); return; }
+
+      const slug = room.toLowerCase().replace(/[^a-z0-9\-]/g, '-');
+      window.location.href = `/room?room=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}`;
+    }
+
+    document.getElementById('btnJoin').addEventListener('click', goToRoom);
+    document.getElementById('btnCreate').addEventListener('click', () => {
+      roomIdInput.value = randomRoomId();
+    });
+
+    // Enter para submeter
+    [displayNameInput, roomIdInput].forEach(el => {
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter') goToRoom(); });
+    });
+  </script>
+</body>
+</html>
